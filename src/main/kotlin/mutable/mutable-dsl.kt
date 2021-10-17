@@ -43,7 +43,7 @@ fun main() {
     }
     println(person)
 
-    personLambdaWithoutReceiver({ p ->
+    personLambdaWithoutReceiver({ p: Person ->
         p.name = "John"
         p.age = 25
         p.address {
@@ -52,14 +52,4 @@ fun main() {
             city = "London"
         }
     })
-
-    personLambdaWithoutReceiver { p ->
-        p.name = "John"
-        p.age = 25
-        p.address {
-            street = "Main Street"
-            number = 42
-            city = "London"
-        }
-    }
 }
