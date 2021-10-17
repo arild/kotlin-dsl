@@ -1,14 +1,8 @@
 package immutable
 
-import java.text.SimpleDateFormat
-import java.util.Date
-
-@DslMarker
-annotation class PersonDsl
-
 data class Person(
     val name: String,
-    val dateOfBirth: Date,
+    val age: Int,
     val addresses: List<Address>
 )
 
@@ -20,22 +14,25 @@ data class Address(
 
 fun person(block: PersonBuilder.() -> Unit): Person = PersonBuilder().apply(block).build()
 
+@DslMarker
+annotation class PersonDsl
+
 @PersonDsl
 class PersonBuilder {
-    var name: String = ""
-    private var dob: Date = Date()
-    var dateOfBirth: String = ""
-        set(value) {
-            dob = SimpleDateFormat("yyyy-MM-dd").parse(value)
-        }
-
+    var name = ""
+    private var age = 0
     private val addresses = mutableListOf<Address>()
 
     fun addresses(block: ADDRESSES.() -> Unit) {
         addresses.addAll(ADDRESSES().apply(block))
     }
 
-    fun build(): Person = Person(name, dob, addresses)
+    infix fun String.age(value: Int) {
+        name = this
+        age = value
+    }
+
+    fun build(): Person = Person(name, age, addresses)
 }
 
 @PersonDsl
@@ -45,7 +42,6 @@ class ADDRESSES : ArrayList<Address>() {
     }
 }
 
-@PersonDsl
 class AddressBuilder {
     var street: String = ""
     var number: Int = 0
@@ -56,8 +52,7 @@ class AddressBuilder {
 
 fun main() {
     val person = person {
-        name = "John"
-        dateOfBirth = "1980-12-01"
+        "John" age 40
         addresses {
             address {
                 street = "Main Street"
