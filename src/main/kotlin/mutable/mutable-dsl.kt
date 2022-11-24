@@ -12,19 +12,6 @@ data class Address(
     var city: String? = null
 )
 
-fun personLambdaWithoutReceiver(block: (Person) -> Unit): Person {
-    val p = Person()
-    block(p)
-    return p
-}
-
-fun personLambdaWithReceiver(block: Person.() -> Unit): Person {
-    val p = Person()
-    p.block()
-    return p
-}
-
-// Lambda with receiver and with .apply() shorthand notation
 fun person(block: Person.() -> Unit): Person = Person().apply(block)
 
 fun Person.address(block: Address.() -> Unit) {
@@ -42,14 +29,4 @@ fun main() {
         }
     }
     println(person)
-
-    personLambdaWithoutReceiver({ p: Person ->
-        p.name = "John"
-        p.age = 25
-        p.address {
-            street = "Main Street"
-            number = 42
-            city = "London"
-        }
-    })
 }
